@@ -8,12 +8,15 @@ public class HeadCheck : MonoBehaviour
     {
         if(collision.tag == "ItemBlock")
         {
-
+            collision.GetComponent<ItemBlock>().isHit = true;
         }
 
         if(collision.tag == "Block")
         {
-            
+            if(Player.instance.isBig)
+            {
+                DestroyObject(collision.gameObject);
+            }
         }
     }
 }
