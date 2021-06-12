@@ -28,32 +28,23 @@ public class ItemBlock : MonoBehaviour
         {
             if(item == "Item" && !itemSent && !Player.instance.isBig)
             {
-                Vector2 position = new Vector2(transform.position.x, transform.position.y + 1f);
-                GameObject spawnMushroom = Instantiate(redMushroom, position, Quaternion.identity);
-                spawnMushroom.name = "RedMushroom";
-                itemSent = true;
+                makeItem(redMushroom, "RedMushroom");
             }
             else if(item == "Item" && !itemSent && Player.instance.isBig)
             {
-                Vector2 position = new Vector2(transform.position.x, transform.position.y + 1f);
-                GameObject spawnFlower = Instantiate(fireFlower, position, Quaternion.identity);
-                spawnFlower.name = "FireFlower";
-                itemSent = true;
+                makeItem(fireFlower, "FireFlower");
             }
             else if(item == "Star" && !itemSent)
             {
-                Vector2 position = new Vector2(transform.position.x, transform.position.y + 1f);
-                GameObject spawnStar = Instantiate(star, position, Quaternion.identity);
-                spawnStar.name = "Star";
-                itemSent = true;
+                makeItem(star, item);
             }
             else if(item == "Coin" && !itemSent)
             {
-
+                StartCoroutine(CoinLife(makeItem(coin, item)));
             }
             else if(item == "1Up" && !itemSent)
             {
-
+                makeItem(greenMushroom, item);
             }
             else if(item == "ManyCois" && !itemSent)
             {
@@ -62,5 +53,22 @@ public class ItemBlock : MonoBehaviour
 
             animator.SetBool("IsHit", isHit);
         }
+    }
+
+    GameObject makeItem(GameObject _item, string itemName)
+    {
+        Vector2 position = new Vector2(transform.position.x, transform.position.y + 1f);
+        GameObject instanceItem = Instantiate(_item, position, Quaternion.identity);
+        instanceItem.name = itemName;
+        itemSent = true;
+
+        return instanceItem;
+    }
+
+    IEnumerator CoinLife(GameObject coin)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(coin);
     }
 }

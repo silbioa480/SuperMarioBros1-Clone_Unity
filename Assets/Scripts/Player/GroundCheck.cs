@@ -6,7 +6,7 @@ public class GroundCheck : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if((collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "ItemBlock" || collision.tag == "Pipe"))
+        if(collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "uBlock" || collision.tag == "ItemBlock" || collision.tag == "Pipe")
         {
             Player.instance.isJumping = false;
             Player.instance.isOnGround = true;
@@ -15,7 +15,7 @@ public class GroundCheck : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        if((collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "ItemBlock" || collision.tag == "Pipe"))
+        if(collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "uBlock" || collision.tag == "ItemBlock" || collision.tag == "Pipe")
         {
             Player.instance.isJumping = false;
             Player.instance.isOnGround = true;
@@ -24,10 +24,9 @@ public class GroundCheck : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if((collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "ItemBlock" || collision.tag == "Pipe"))
+        if(collision.tag == "Floor" || collision.tag == "Block" || collision.tag == "uBlock" || collision.tag == "ItemBlock" || collision.tag == "Pipe")
         {
             Player.instance.isJumping = true;
-            Player.instance.isOnGround = false;
         }
     }
 }

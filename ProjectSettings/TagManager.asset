@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Floor
+  - ItemBlock
+  - Item
+  - Block
+  - Fire
+  - uBlock
   layers:
   - Default
   - TransparentFX

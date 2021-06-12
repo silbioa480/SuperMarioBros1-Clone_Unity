@@ -166,10 +166,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4ae94e9c68a904a9619aae3eb2ef66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOnGround: 1
   isJumping: 0
   isBig: 0
   isDead: 0
+  isChanging: 0
+  hasWon: 0
+  isDownPole: 0
+  isCrouching: 0
+  hasFlower: 0
+  changeSize: 0
+  isRight: 0
+  head: {fileID: 1383803083422496}
+  feet: {fileID: 1594171189111198}
+  fireball: {fileID: 1557330133425398, guid: 4e80738124ea4944fa07ddced308e5d9, type: 3}
+  sp: {fileID: 212946325934862870}
   rb: {fileID: 50937158626039660}
+  animator: {fileID: 95090159514507072}
 --- !u!1 &1383803083422496
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,7 +20,12 @@ public class Player : MonoBehaviour
     public bool isCrouching = false;
     public bool hasFlower = false;
     public bool changeSize = false;
+    public bool isRight;
     bool onPipe;
+    public GameObject head;
+    public GameObject feet;
+    public GameObject fireball;
+    public SpriteRenderer sp;
     Vector2 flagPosition;
     public Rigidbody2D rb;
     public Animator animator;
@@ -47,6 +52,7 @@ public class Player : MonoBehaviour
         if(Input.GetAxisRaw("Vertical") < 0)
         {
             isCrouching = true;
+            if(isBig) Crouch(isChanging);
             movementHorizontal = 0f;
         }
         else
@@ -69,6 +75,32 @@ public class Player : MonoBehaviour
             isJumping = true;
             isOnGround = false;
         }
+
+        if(Input.GetKeyDown(KeyCode.Z) && hasFlower)
+        {
+            Vector2 position;
+            //shoot in right direction
+            if (sp.flipX)
+            {
+                position = new Vector2(transform.position.x - 1, transform.position.y);
+                isRight = false;
+            }
+            else
+            {
+                position = new Vector2(transform.position.x + 1, transform.position.y);
+                isRight = true;
+            }
+            Instantiate(fireball, position, Quaternion.identity);
+        }
+
+        if(movementHorizontal < 0)
+        {
+            sp.flipX = true;
+        }
+        else if(movementHorizontal > 0)
+        {
+            sp.flipX = false;
+        }
         
         setAnimation();
     }
@@ -85,6 +117,27 @@ public class Player : MonoBehaviour
         animator.SetBool("IsBig", isBig);
         animator.SetBool("IsFire", hasFlower);
         animator.SetBool("IsChanging", changeSize);
+    }
+
+    void Crouch(bool isCrouch)
+    {
+        SetHitBox(!isCrouch);
+    }
+
+    void SetHitBox(bool bigSize)
+    {
+        if (bigSize)
+        {
+            head.GetComponent<BoxCollider2D>().offset = new Vector2(0f, 1f);
+            feet.GetComponent<BoxCollider2D>().offset = new Vector2(0f, -0.1f);
+            transform.GetComponent<BoxCollider2D>().size = new Vector2(1f, 2f);
+        }
+        else
+        {
+            head.GetComponent<BoxCollider2D>().offset = new Vector2(0f, 0.5f);
+            feet.GetComponent<BoxCollider2D>().offset = new Vector2(0f, 0.35f);
+            transform.GetComponent<BoxCollider2D>().size = new Vector2(0.75f, 1f);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -105,24 +158,25 @@ public class Player : MonoBehaviour
             if(collision.name == "RedMushroom")
             {
                 isBig = true;
-                DestroyObject(collision.gameObject);
+                SetHitBox(isBig);
+                Destroy(collision.gameObject);
             }
             else if(collision.name == "FireFlower")
             {
                 hasFlower = true;        
-                DestroyObject(collision.gameObject);
+                Destroy(collision.gameObject);
             }
             else if(collision.name == "Star")
             {
-                DestroyObject(collision.gameObject);
+                Destroy(collision.gameObject);
             }
             else if(collision.name == "Coin")
             {
-                DestroyObject(collision.gameObject);
+                Destroy(collision.gameObject);
             }
             else if (collision.name == "GreenMushroom")
             {
-                DestroyObject(collision.gameObject);
+                Destroy(collision.gameObject);
             }
         }
         if(collision.tag == "Enemy")

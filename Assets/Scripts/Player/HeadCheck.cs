@@ -15,8 +15,14 @@ public class HeadCheck : MonoBehaviour
         {
             if(Player.instance.isBig)
             {
-                DestroyObject(collision.gameObject);
+                StartCoroutine(breakBlock(collision));
             }
         }
+    }
+
+    IEnumerator breakBlock(Collider2D collision)
+    {
+        yield return new WaitForSeconds(0.05f);
+        Destroy(collision.gameObject);
     }
 }
