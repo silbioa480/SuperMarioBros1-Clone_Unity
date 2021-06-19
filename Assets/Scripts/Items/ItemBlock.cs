@@ -41,6 +41,8 @@ public class ItemBlock : MonoBehaviour
             else if(item == "Coin" && !itemSent)
             {
                 StartCoroutine(CoinLife(makeItem(coin, item)));
+                GameManager.points += 100;
+                GameManager.coinCount++;
             }
             else if(item == "1Up" && !itemSent)
             {

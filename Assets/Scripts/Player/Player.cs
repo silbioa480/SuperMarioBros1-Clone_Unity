@@ -41,75 +41,86 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y < -5)
+        if(!isDead)
         {
-            isDead = true;
-            Debug.Log("Dead");
-        }
-
-        movementHorizontal = Input.GetAxisRaw("Horizontal");
-
-        if(Input.GetAxisRaw("Vertical") < 0)
-        {
-            isCrouching = true;
-            if(isBig) Crouch(isChanging);
-            movementHorizontal = 0f;
-        }
-        else
-        {
-            isCrouching = false;
-        }
-
-        if(Input.GetKey(KeyCode.Z))
-        {
-            transform.Translate(new Vector2(movementHorizontal, 0) * RUNSPEED * Time.deltaTime, 0);
-        }
-        else
-        {
-            transform.Translate(new Vector2(movementHorizontal, 0) * SPEED * Time.deltaTime, 0);
-        }
-
-        if(Input.GetKeyDown(KeyCode.X) && !isJumping)
-        {
-            rb.AddForce(new Vector2(0f, JUMPFORCE));
-            isJumping = true;
-            isOnGround = false;
-        }
-
-        if(Input.GetKeyDown(KeyCode.Z) && hasFlower)
-        {
-            Vector2 position;
-            //shoot in right direction
-            if (sp.flipX)
+            if(transform.position.y < -5)
             {
-                position = new Vector2(transform.position.x - 1, transform.position.y);
-                isRight = false;
+                isDead = true;
+                Debug.Log("Dead");
+            }
+
+            movementHorizontal = Input.GetAxisRaw("Horizontal");
+
+            if(Input.GetAxisRaw("Vertical") < 0)
+            {
+                if(isBig) 
+                {
+                    isCrouching = true;
+                    SetHitBox(!isCrouching);
+                }
+                
+                movementHorizontal = 0f;
             }
             else
             {
-                position = new Vector2(transform.position.x + 1, transform.position.y);
-                isRight = true;
+                if(isBig) 
+                {
+                    isCrouching = false;
+                    SetHitBox(!isCrouching);
+                }
             }
-            Instantiate(fireball, position, Quaternion.identity);
-        }
 
-        if(movementHorizontal < 0)
-        {
-            sp.flipX = true;
+            if(Input.GetKey(KeyCode.Z))
+            {
+                transform.Translate(new Vector2(movementHorizontal, 0) * RUNSPEED * Time.deltaTime, 0);
+            }
+            else
+            {
+                transform.Translate(new Vector2(movementHorizontal, 0) * SPEED * Time.deltaTime, 0);
+            }
+
+            if(Input.GetKeyDown(KeyCode.X) && !isJumping)
+            {
+                rb.AddForce(new Vector2(0f, JUMPFORCE));
+                isJumping = true;
+                isOnGround = false;
+            }
+
+            if(Input.GetKeyDown(KeyCode.Z) && hasFlower)
+            {
+                Vector2 position;
+                //shoot in right direction
+                if (sp.flipX)
+                {
+                    position = new Vector2(transform.position.x - 1, transform.position.y);
+                    isRight = false;
+                }
+                else
+                {
+                    position = new Vector2(transform.position.x + 1, transform.position.y);
+                    isRight = true;
+                }
+                Instantiate(fireball, position, Quaternion.identity);
+            }
+
+            if(movementHorizontal < 0)
+            {
+                sp.flipX = true;
+            }
+            else if(movementHorizontal > 0)
+            {
+                sp.flipX = false;
+            }
+
+            setAnimation();
         }
-        else if(movementHorizontal > 0)
-        {
-            sp.flipX = false;
-        }
-        
-        setAnimation();
+        else animator.SetBool("IsDead", isDead);
     }
 
     void setAnimation()
     {
         animator.SetFloat("Movement", Mathf.Abs(movementHorizontal));
         
-        animator.SetBool("IsDead", isDead);
         animator.SetBool("Won", hasWon);
         animator.SetBool("IsDownPole", isDownPole);
         animator.SetBool("IsCrouching", isCrouching);
@@ -117,11 +128,6 @@ public class Player : MonoBehaviour
         animator.SetBool("IsBig", isBig);
         animator.SetBool("IsFire", hasFlower);
         animator.SetBool("IsChanging", changeSize);
-    }
-
-    void Crouch(bool isCrouch)
-    {
-        SetHitBox(!isCrouch);
     }
 
     void SetHitBox(bool bigSize)
@@ -153,7 +159,7 @@ public class Player : MonoBehaviour
             onPipe = true;
         }
 
-        if(collision.tag == "Item")
+        if(collision.tag == "Item" && !isDead)
         {
             if(collision.name == "RedMushroom")
             {
@@ -178,10 +184,12 @@ public class Player : MonoBehaviour
             {
                 Destroy(collision.gameObject);
             }
+
+            GameManager.points += 100;
         }
         if(collision.tag == "Enemy")
         {
-            
+            SetHitBox(isBig);
         }
     }
 }
